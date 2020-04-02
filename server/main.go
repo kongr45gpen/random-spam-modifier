@@ -1,6 +1,9 @@
 package main
 
 import (
+	"os/exec"
+	"strings"
+
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 )
@@ -28,8 +31,18 @@ func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*mode
 		return post, ""
 	}
 
-	// TODO: Check team as well
-	post.Message = "I have successfully edited this message"
+	// Time to run our modifier script!
+	subproc := exec.Command("/scripts/ougk.py")
+	subproc.Stdin = strings.NewReader(post.Message)
+	output, error := subproc.Output()
+
+	if error != nil {
+		p.API.LogError(error.Error())
+	}
+
+	subproc.Wait()
+
+	post.Message = string(output)
 
 	// Otherwise, allow the post through.
 	return post, ""
