@@ -12,9 +12,9 @@ var manifest *model.Manifest
 
 const manifestStr = `
 {
-  "id": "com.mattermost.plugin-starter-template",
-  "name": "Plugin Starter Template",
-  "description": "This plugin serves as a starting point for writing a Mattermost plugin.",
+  "id": "com.kongr45gpen.random-spam-modifier",
+  "name": "Random Spam Modifier",
+  "description": "This plugin modifies random spam.",
   "version": "0.1.0",
   "min_server_version": "5.12.0",
   "server": {
@@ -31,7 +31,16 @@ const manifestStr = `
   "settings_schema": {
     "header": "",
     "footer": "",
-    "settings": []
+    "settings": [
+      {
+        "key": "ChannelName",
+        "display_name": "Channel Name",
+        "type": "text",
+        "help_text": "The victim channel name. Currently not working",
+        "placeholder": "off-topic",
+        "default": "off-topic"
+      }
+    ]
   }
 }
 `
