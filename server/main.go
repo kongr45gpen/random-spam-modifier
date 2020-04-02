@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"os/exec"
 	"strings"
 
@@ -31,10 +32,13 @@ func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*mode
 		return post, ""
 	}
 
+	// Encode post data as JSON
+	postData, _ := json.Marshal(post)
+
 	// Time to run our modifier script!
 	subproc := exec.Command("/scripts/ougk.py")
-	subproc.Stdin = strings.NewReader(post.Message)
-	output, error := subproc.Output()
+	subproc.Stdin = strings.NewReader(string(postData))
+	output, error := subproc.CombinedOutput()
 
 	if error != nil {
 		p.API.LogError(error.Error())
